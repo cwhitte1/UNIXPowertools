@@ -1,0 +1,34 @@
+#!/bin/sh
+# Charles Marcus Whitten
+# Pledged -- This assignment is entirely my own work.
+#echo 'Input name of directory to organize:'
+#read inputname
+#echo $inputname
+#PATH=`find . -name $inputname`
+#echo $PATH
+# for all (*) files in the current directory
+for i in *;
+do
+    # -f checks if it is a file (skip directories)
+    [ -f "$i" ] || continue
+    #[ -f "$Whitten_UNIXProject" ] || continue
+    # store the file name in filename
+    filename=$(basename $i)
+    #echo $filename
+    # ext = the extension of the file (here we don't care, jfi)
+    ext="${filename##*.}"
+    #echo "fuck"
+    #echo $ext
+    # dir = the file name without its extension
+    dir="${filename%.*}"
+    if [ $filename != $ext ]
+    # create the directory
+    then
+      mkdir -p $ext
+    fi
+    # move the file in that directory
+    if [ $filename != $ext ]
+    then
+      mv $i $ext
+    fi
+done

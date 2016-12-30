@@ -1,0 +1,51 @@
+# Charles Marcus Whitten
+# Pledged -- I got this portion of code from the sample code posted on the course page.
+# This assignment is entirely my own work, except for portions I got from sample programs for the course.
+#
+# makefile to generate dependencies for C programs automatically
+# based on example from GNU make manual (under heading "Generating
+# Prerequisites Automatically")
+#
+
+# override options for implicit rule(s)
+CC = gcc # since we make use of gcc feature -MM
+
+#
+# treat .o files as "intermediate" files so they can be deleted
+# automatically
+#
+.INTERMEDIATE:	$(wildcard *.o)
+
+#
+# rule to make .d files for all .c files
+#
+sources =  $(wildcard *.c)
+dependfiles = $(sources:.c=.d)
+
+alldepend:  $(dependfiles)
+
+#
+# include all files of prerequisites
+#
+include $(wildcard *.d) $(wildcard *.depend)
+
+#
+# pattern rule for generating files of prerequisites
+# (mostly copied from GNU make manual)
+#
+# to find out what the "sed" does, try "gcc -MM pgm.c" and compare
+# result to what this makefile generates as pgm.d
+#
+%.d: %.c
+	@echo remaking dependency file $@
+	@set -e; \
+		$(CC) -MM $(CPPFLAGS) $< \
+		  | sed 's/\($*\)\.o[ :]*/\1.o $@ : /g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+#
+# cleanup
+#
+.PHONY:  dclean
+dclean:
+	-rm $(dependfiles)
